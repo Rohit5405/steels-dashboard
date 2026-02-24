@@ -60,7 +60,6 @@ margin-left:230px;
 padding:30px;
 }
 
-/* Table */
 .table-container{
 background:white;
 border-radius:12px;
@@ -72,7 +71,7 @@ margin-top:20px;
 table{
 border-collapse:collapse;
 width:100%;
-min-width:1200px;
+min-width:1500px;
 }
 
 th, td{
@@ -80,17 +79,17 @@ padding:10px;
 font-size:13px;
 border-bottom:1px solid #eee;
 white-space:nowrap;
+text-align:left;
 }
 
 th{
 background:#0b5d44;
 color:white;
 font-weight:500;
-text-align:left;
 }
 
 tr:hover{
-background:#f9f9f9;
+background:#f7f7f7;
 }
 
 .loader{
@@ -103,7 +102,6 @@ color:#777;
 
 <body>
 
-<!-- Sidebar -->
 <div class="sidebar">
 <h2>BOS Internal Approval</h2>
 
@@ -114,7 +112,6 @@ color:#777;
 <a href="master-data.html" class="menu-item">Master Data</a>
 </div>
 
-<!-- Main Content -->
 <div class="main">
 <h2>Google Sheet Master Data</h2>
 
@@ -122,7 +119,7 @@ color:#777;
 <table id="sheetTable">
 <thead></thead>
 <tbody>
-<tr><td colspan="20" class="loader">Loading Data...</td></tr>
+<tr><td colspan="50" class="loader">Loading Data...</td></tr>
 </tbody>
 </table>
 </div>
@@ -131,11 +128,9 @@ color:#777;
 
 <script>
 
-// Highlight active menu
+// Active sidebar highlight
 let currentPage = window.location.pathname.split("/").pop();
-let menuItems = document.querySelectorAll(".menu-item");
-
-menuItems.forEach(item=>{
+document.querySelectorAll(".menu-item").forEach(item=>{
 if(item.getAttribute("href") === currentPage){
 item.classList.add("active");
 }
@@ -144,11 +139,46 @@ item.classList.add("active");
 // Google Sheet CSV URL
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTQ6kX1mngT46Apl8xolwlaBAiXrrnmQmXyu8wQqOSmjynpApHsaOpPsvUGxBgok9aRZEcbMmWzgE5d/pub?output=csv";
 
+// Proper CSV parser
+function parseCSV(text) {
+const rows = [];
+let row = [];
+let value = '';
+let insideQuotes = false;
+
+for (let i = 0; i < text.length; i++) {
+const char = text[i];
+const nextChar = text[i+1];
+
+if (char === '"' && insideQuotes && nextChar === '"') {
+value += '"';
+i++;
+} else if (char === '"') {
+insideQuotes = !insideQuotes;
+} else if (char === ',' && !insideQuotes) {
+row.push(value);
+value = '';
+} else if (char === '\n' && !insideQuotes) {
+row.push(value);
+rows.push(row);
+row = [];
+value = '';
+} else {
+value += char;
+}
+}
+row.push(value);
+rows.push(row);
+
+return rows;
+}
+
+function loadData(){
 fetch(sheetURL)
-.then(response => response.text())
+.then(res => res.text())
 .then(data => {
 
-const rows = data.trim().split("\n").map(row => row.split(","));
+const rows = parseCSV(data.trim());
 const table = document.getElementById("sheetTable");
 const thead = table.querySelector("thead");
 const tbody = table.querySelector("tbody");
@@ -156,27 +186,23 @@ const tbody = table.querySelector("tbody");
 thead.innerHTML = "";
 tbody.innerHTML = "";
 
-// Create Header Row
+// Header
 const headerRow = document.createElement("tr");
-
 rows[0].forEach(cell => {
 const th = document.createElement("th");
 th.textContent = cell;
 headerRow.appendChild(th);
 });
-
 thead.appendChild(headerRow);
 
-// Create Data Rows
+// Data
 rows.slice(1).forEach(row => {
 const tr = document.createElement("tr");
-
 row.forEach(cell => {
 const td = document.createElement("td");
 td.textContent = cell;
 tr.appendChild(td);
 });
-
 tbody.appendChild(tr);
 });
 
@@ -184,6 +210,12 @@ tbody.appendChild(tr);
 .catch(error => {
 document.querySelector(".loader").innerText = "Error Loading Data";
 });
+}
+
+loadData();
+
+// Auto refresh every 15 seconds
+setInterval(loadData,15000);
 
 </script>
 
