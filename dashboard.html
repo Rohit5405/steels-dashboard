@@ -6,7 +6,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
-
 *{
 margin:0;
 padding:0;
@@ -61,6 +60,7 @@ margin-left:230px;
 padding:30px;
 }
 
+/* Topbar */
 .topbar{
 display:flex;
 justify-content:space-between;
@@ -106,7 +106,6 @@ background:white;
 padding:20px;
 border-radius:12px;
 box-shadow:0 5px 15px rgba(0,0,0,0.08);
-margin-bottom:20px;
 }
 
 .bar{
@@ -115,7 +114,6 @@ background:#0b5d44;
 margin-bottom:10px;
 border-radius:3px;
 }
-
 </style>
 </head>
 
@@ -124,12 +122,11 @@ border-radius:3px;
 <div class="sidebar">
 <h2>BOS Internal Approval</h2>
 
-<a href="dashboard.html" class="menu-item active">Dashboard</a>
+<a href="dashboard.html" class="menu-item">Dashboard</a>
 <a href="enquiry.html" class="menu-item">Enquiry</a>
 <a href="#" class="menu-item">Quotation</a>
 <a href="#" class="menu-item">Order Acceptance</a>
 <a href="#" class="menu-item">Master Data</a>
-
 </div>
 
 <div class="main">
@@ -170,6 +167,17 @@ border-radius:3px;
 </div>
 
 </div>
+
+<script>
+let currentPage = window.location.pathname.split("/").pop();
+let menuItems = document.querySelectorAll(".menu-item");
+
+menuItems.forEach(item=>{
+if(item.getAttribute("href") === currentPage){
+item.classList.add("active");
+}
+});
+</script>
 
 </body>
 </html>
