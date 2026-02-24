@@ -5,9 +5,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="layout.css">
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Poppins',sans-serif;
+        }
+
+        body{
+            background:#e9f1ec;
+        }
+
+        .sidebar{
+            width:240px;
+            height:100vh;
+            background:linear-gradient(180deg,#0d3f2e,#0b5d44);
+            padding:25px;
+            position:fixed;
+            left:0;
+            top:0;
+            color:white;
+        }
+
+        .sidebar h2{
+            margin-bottom:40px;
+            font-size:18px;
+        }
+
+        .menu-item{
+            display:block;
+            padding:12px 15px;
+            margin-bottom:8px;
+            border-radius:8px;
+            text-decoration:none;
+            color:white;
+            font-size:14px;
+        }
+
+        .menu-item:hover{
+            background:rgba(255,255,255,0.15);
+        }
+
+        .menu-item.active{
+            background:#f4c430;
+            color:#0b5d44;
+            font-weight:600;
+        }
+
+        .main{
+            margin-left:240px;
+            padding:30px;
+        }
+
+        .table-container{
+            background:white;
+            border-radius:12px;
+            box-shadow:0 5px 15px rgba(0,0,0,0.08);
+            overflow:auto;
+            margin-top:20px;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        th,td{
+            padding:10px;
+            border-bottom:1px solid #eee;
+            font-size:13px;
+            white-space:nowrap;
+        }
+
+        th{
+            background:#0b5d44;
+            color:white;
+        }
+    </style>
 </head>
+
 <body>
+
+<div class="sidebar">
+    <h2>BOS Internal Approval</h2>
+
+    <a href="index.html" class="menu-item">Dashboard</a>
+    <a href="enquiry.html" class="menu-item">Enquiry</a>
+    <a href="#" class="menu-item">Quotation</a>
+    <a href="#" class="menu-item">Order Acceptance</a>
+    <a href="#" class="menu-item">Credit Limit</a>
+    <a href="master-data.html" class="menu-item active">Master Data</a>
+</div>
 
 <div class="main">
 
@@ -25,32 +115,69 @@
 
 </div>
 
-<script src="layout.js"></script>
-
 <script>
+
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTQ6kX1mngT46Apl8xolwlaBAiXrrnmQmXyu8wQqOSmjynpApHsaOpPsvUGxBgok9aRZEcbMmWzgE5d/pub?output=csv";
+
+function parseCSV(text) {
+    const rows = [];
+    let row = [];
+    let current = '';
+    let insideQuotes = false;
+
+    for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const next = text[i+1];
+
+        if (char === '"' && insideQuotes && next === '"') {
+            current += '"';
+            i++;
+        } else if (char === '"') {
+            insideQuotes = !insideQuotes;
+        } else if (char === ',' && !insideQuotes) {
+            row.push(current);
+            current = '';
+        } else if ((char === '\n' || char === '\r') && !insideQuotes) {
+            if(current){
+                row.push(current);
+                rows.push(row);
+                row = [];
+                current = '';
+            }
+        } else {
+            current += char;
+        }
+    }
+
+    return rows;
+}
 
 fetch(sheetURL)
 .then(res => res.text())
 .then(data => {
-    const rows = data.split("\n").map(r => r.split(","));
-    let table = document.getElementById("sheetTable");
+
+    const rows = parseCSV(data.trim());
+    const table = document.getElementById("sheetTable");
     table.innerHTML = "";
 
-    rows.forEach((row, index) => {
-        let tr = document.createElement("tr");
-        row.forEach(cell => {
-            let cellElement = document.createElement(index === 0 ? "th" : "td");
-            cellElement.textContent = cell;
-            tr.appendChild(cellElement);
+    rows.forEach((row,index)=>{
+        const tr = document.createElement("tr");
+
+        row.forEach(cell=>{
+            const el = document.createElement(index===0?"th":"td");
+            el.textContent = cell;
+            tr.appendChild(el);
         });
+
         table.appendChild(tr);
     });
+
 })
-.catch(() => {
+.catch(()=>{
     document.getElementById("sheetTable").innerHTML =
-        "<tr><td style='padding:40px;text-align:center;'>Error Loading Sheet</td></tr>";
+        "<tr><td style='padding:40px;text-align:center;color:red;'>Sheet Load Error</td></tr>";
 });
+
 </script>
 
 </body>
