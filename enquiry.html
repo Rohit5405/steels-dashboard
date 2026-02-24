@@ -4,133 +4,61 @@
 <title>BOS Enquiry</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Poppins',sans-serif;
-}
-
-body{
-background:#e9f1ec;
-}
-
-/* Main */
-.main{
-margin-left:230px;
-padding:30px;
-}
-
-.topbar{
-display:flex;
-justify-content:space-between;
-margin-bottom:20px;
-}
-
-.search-box{
-padding:8px 15px;
-border:none;
-border-radius:25px;
-width:250px;
-box-shadow:0 3px 8px rgba(0,0,0,0.1);
-}
-
-.add-btn{
-background:#0b5d44;
-color:white;
-border:none;
-padding:8px 15px;
-border-radius:6px;
-cursor:pointer;
-}
-
-.table-container{
-background:white;
-border-radius:12px;
-box-shadow:0 5px 15px rgba(0,0,0,0.08);
-overflow:auto;
-}
-
-table{
-border-collapse:collapse;
-width:100%;
-min-width:1000px;
-}
-
-th, td{
-padding:10px;
-font-size:13px;
-border-bottom:1px solid #eee;
-white-space:nowrap;
-}
-
-th{
-background:#0b5d44;
-color:white;
-text-align:left;
-}
-
-.empty{
-text-align:center;
-padding:40px;
-color:#888;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#e9f1ec;}
+.main{margin-left:230px;padding:30px;}
+.topbar{display:flex;justify-content:space-between;margin-bottom:20px;}
+.search-box{padding:8px 15px;border:none;border-radius:25px;width:250px;}
+.add-btn{background:#0b5d44;color:white;border:none;padding:8px 15px;border-radius:6px;}
+table{width:100%;border-collapse:collapse;background:white;}
+th,td{padding:10px;border-bottom:1px solid #eee;}
+th{background:#0b5d44;color:white;}
 </style>
 </head>
-
 <body>
 
-<!-- Sidebar Inject -->
-<div id="sidebar-container"></div>
+<div id="sidebar"></div>
 
 <div class="main">
-
 <div class="topbar">
-<input type="text" class="search-box" placeholder="Search Enquiry...">
+<input class="search-box" placeholder="Search Enquiry...">
 <button class="add-btn">+ Add Enquiry</button>
 </div>
 
-<div class="table-container">
 <table>
-<thead>
 <tr>
 <th>Enquiry No</th>
 <th>Timestamp</th>
 <th>KAM</th>
 <th>Customer</th>
 <th>Grade</th>
-<th>Size</th>
 <th>Qty</th>
 <th>Status</th>
 </tr>
-</thead>
-<tbody>
 <tr>
-<td colspan="8" class="empty">No Enquiries Available</td>
+<td colspan="7" style="text-align:center;padding:40px;">No Enquiries Available</td>
 </tr>
-</tbody>
 </table>
-</div>
 
 </div>
 
 <script>
-// Load Sidebar
 fetch("sidebar.html")
-.then(response => response.text())
-.then(data => {
-document.getElementById("sidebar-container").innerHTML = data;
+.then(res=>res.text())
+.then(data=>{
+document.getElementById("sidebar").innerHTML=data;
+activateMenu();
+});
 
-// Auto active highlight
-let currentPage = window.location.pathname.split("/").pop();
+function activateMenu(){
+let currentPage=window.location.pathname.split("/").pop();
 document.querySelectorAll(".menu-item").forEach(item=>{
-if(item.getAttribute("href") === currentPage){
+if(item.getAttribute("href")===currentPage){
 item.classList.add("active");
 }
 });
-});
+}
 </script>
 
 </body>
