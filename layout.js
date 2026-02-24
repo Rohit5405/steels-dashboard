@@ -1,31 +1,31 @@
-function loadLayout() {
-    const sidebar = `
-        <div class="sidebar">
-            <h2>BOS Internal Approval</h2>
+const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTQ6kX1mngT46Apl8xolwlaBAiXrrnmQmXyu8wQqOSmjynpApHsaOpPsvUGxBgok9aRZEcbMmWzgE5d/pub?output=csv";
 
-            <a href="index.html" class="menu-item">Dashboard</a>
-            <a href="enquiry.html" class="menu-item">Enquiry</a>
-            <a href="#" class="menu-item">Quotation</a>
-            <a href="#" class="menu-item">Order Acceptance</a>
-            <a href="#" class="menu-item">Credit Limit</a>
-            <a href="master-data.html" class="menu-item">Master Data</a>
-        </div>
-    `;
+fetch(sheetURL)
+.then(response => response.text())
+.then(csv => {
 
-    document.body.insertAdjacentHTML("afterbegin", sidebar);
+    const rows = csv.split("\n").map(row =>
+        row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)
+    );
 
-    highlightActive();
-}
+    const table = document.getElementById("sheetTable");
+    table.innerHTML = "";
 
-function highlightActive() {
-    let page = window.location.pathname.split("/").pop();
-    if(page === "") page = "index.html";
+    rows.forEach((row, index) => {
+        const tr = document.createElement("tr");
 
-    document.querySelectorAll(".menu-item").forEach(item => {
-        if(item.getAttribute("href") === page) {
-            item.classList.add("active");
-        }
+        row.forEach(cell => {
+            const cleanCell = cell.replace(/^"|"$/g, "");
+            const element = document.createElement(index === 0 ? "th" : "td");
+            element.textContent = cleanCell;
+            tr.appendChild(element);
+        });
+
+        table.appendChild(tr);
     });
-}
 
-document.addEventListener("DOMContentLoaded", loadLayout);
+})
+.catch(() => {
+    document.getElementById("sheetTable").innerHTML =
+        "<tr><td style='padding:40px;text-align:center;color:red;'>Sheet Load Error</td></tr>";
+});
