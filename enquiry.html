@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BOS - Enquiry Management</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins',sans-serif;
+    }
+
+    body{
+      display:flex;
+      background:#e9f1ec;
+    }
+
+    /* Sidebar */
+    .sidebar{
+      width:230px;
+      height:100vh;
+      background:linear-gradient(180deg,#0d3f2e,#0b5d44);
+      padding:25px;
+      color:white;
+    }
+
+    .sidebar h2{
+      margin-bottom:40px;
+      font-size:18px;
+    }
+
+    .menu-item{
+      padding:12px 15px;
+      margin-bottom:10px;
+      border-radius:8px;
+      cursor:pointer;
+      font-size:14px;
+    }
+
+    .menu-item:hover{
+      background:rgba(255,255,255,0.15);
+    }
+
+    /* Main */
+    .main{
+      flex:1;
+      padding:30px;
+      overflow:auto;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:20px;
+    }
+
+    .search-box{
+      padding:8px 15px;
+      border:none;
+      border-radius:25px;
+      width:250px;
+      box-shadow:0 3px 8px rgba(0,0,0,0.08);
+    }
+
+    .add-btn{
+      background:#0b5d44;
+      color:white;
+      border:none;
+      padding:8px 15px;
+      border-radius:6px;
+      cursor:pointer;
+      font-size:13px;
+    }
+
+    .add-btn:hover{
+      background:#094836;
+    }
+
+    /* Table */
+    .table-container{
+      background:white;
+      border-radius:12px;
+      box-shadow:0 5px 15px rgba(0,0,0,0.08);
+      overflow:auto;
+    }
+
+    table{
+      border-collapse:collapse;
+      width:100%;
+      min-width:2500px;
+    }
+
+    th, td{
+      padding:8px 10px;
+      font-size:12px;
+      text-align:left;
+      border-bottom:1px solid #eee;
+      white-space:nowrap;
+    }
+
+    th{
+      background:#0b5d44;
+      color:white;
+      position:sticky;
+      top:0;
+      z-index:2;
+    }
+
+    tr:hover{
+      background:#f3f7f5;
+    }
+
+    input[type="checkbox"]{
+      width:16px;
+      height:16px;
+    }
+
+    /* Status badges */
+    .badge{
+      padding:3px 8px;
+      border-radius:20px;
+      font-size:11px;
+      font-weight:500;
+    }
+
+    .pending{ background:#fff3cd; color:#856404; }
+    .approved{ background:#d4edda; color:#155724; }
+    .rejected{ background:#f8d7da; color:#721c24; }
+
+    /* Action buttons */
+    .action-btn{
+      padding:4px 8px;
+      font-size:11px;
+      border:none;
+      border-radius:4px;
+      cursor:pointer;
+      margin-right:4px;
+    }
+
+    .approve{ background:#0b5d44; color:white; }
+    .reject{ background:#b02a37; color:white; }
+
+    .empty{
+      text-align:center;
+      padding:40px;
+      color:#888;
+      font-size:14px;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="sidebar">
+    <h2>BOS Approval</h2>
+    <div class="menu-item">Dashboard</div>
+    <div class="menu-item">Enquiry</div>
+    <div class="menu-item">Quotation</div>
+    <div class="menu-item">Order Acceptance</div>
+    <div class="menu-item">Master Data</div>
+  </div>
+
+  <div class="main">
+
+    <div class="topbar">
+      <input type="text" class="search-box" placeholder="Search Enquiry...">
+      <button class="add-btn">+ Add Enquiry</button>
+    </div>
+
+    <div class="table-container">
+      <table>
+
+        <thead>
+          <tr>
+            <th><input type="checkbox"></th>
+            <th>Enquiry No</th>
+            <th>Timestamp</th>
+            <th>KAM</th>
+            <th>Customer</th>
+            <th>Grade</th>
+            <th>Size</th>
+            <th>Shape</th>
+            <th>Qty</th>
+            <th>Mill</th>
+            <th>Availability</th>
+            <th>Price</th>
+            <th>Payment Term</th>
+            <th>Lead Time</th>
+            <th>Quotation Status</th>
+            <th>Approval Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <!-- Empty state -->
+          <tr>
+            <td colspan="17" class="empty">
+              No Enquiries Available
+            </td>
+          </tr>
+
+          <!-- Example structure (future dynamic row)
+          <tr>
+            <td><input type="checkbox"></td>
+            <td>ENQ-001</td>
+            <td>24-01-2026</td>
+            <td>Ganesh</td>
+            <td>Trinity</td>
+            <td>20MnCr5</td>
+            <td>75</td>
+            <td>Round</td>
+            <td>10 MT</td>
+            <td>Aarti</td>
+            <td>Available</td>
+            <td>65000</td>
+            <td>30 Days</td>
+            <td>7 Days</td>
+            <td><span class="badge pending">Pending</span></td>
+            <td><span class="badge pending">Pending</span></td>
+            <td>
+              <button class="action-btn approve">Approve</button>
+              <button class="action-btn reject">Reject</button>
+            </td>
+          </tr>
+          -->
+
+        </tbody>
+
+      </table>
+    </div>
+
+  </div>
+
+</body>
+</html>
