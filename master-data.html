@@ -4,182 +4,74 @@
 <title>Master Data</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Poppins',sans-serif;
-}
-
-body{
-background:#e9f1ec;
-}
-
-/* Main */
-.main{
-margin-left:230px;
-padding:30px;
-}
-
-.table-container{
-background:white;
-border-radius:12px;
-box-shadow:0 5px 15px rgba(0,0,0,0.08);
-overflow:auto;
-margin-top:20px;
-}
-
-table{
-border-collapse:collapse;
-width:100%;
-min-width:1500px;
-}
-
-th, td{
-padding:10px;
-font-size:13px;
-border-bottom:1px solid #eee;
-white-space:nowrap;
-text-align:left;
-}
-
-th{
-background:#0b5d44;
-color:white;
-font-weight:500;
-}
-
-tr:hover{
-background:#f7f7f7;
-}
-
-.loader{
-padding:40px;
-text-align:center;
-color:#777;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#e9f1ec;}
+.main{margin-left:230px;padding:30px;}
+table{width:100%;border-collapse:collapse;background:white;}
+th,td{padding:10px;border-bottom:1px solid #eee;white-space:nowrap;}
+th{background:#0b5d44;color:white;}
+.loader{text-align:center;padding:40px;}
 </style>
 </head>
-
 <body>
 
-<!-- Sidebar Inject -->
-<div id="sidebar-container"></div>
+<div id="sidebar"></div>
 
 <div class="main">
 <h2>Google Sheet Master Data</h2>
-
-<div class="table-container">
 <table id="sheetTable">
 <thead></thead>
 <tbody>
-<tr><td colspan="50" class="loader">Loading Data...</td></tr>
+<tr><td colspan="50" class="loader">Loading...</td></tr>
 </tbody>
 </table>
 </div>
 
-</div>
-
 <script>
-
-// Load Sidebar
 fetch("sidebar.html")
-.then(response => response.text())
-.then(data => {
-document.getElementById("sidebar-container").innerHTML = data;
+.then(res=>res.text())
+.then(data=>{
+document.getElementById("sidebar").innerHTML=data;
+activateMenu();
+});
 
-// Auto active highlight
-let currentPage = window.location.pathname.split("/").pop();
+function activateMenu(){
+let currentPage=window.location.pathname.split("/").pop();
 document.querySelectorAll(".menu-item").forEach(item=>{
-if(item.getAttribute("href") === currentPage){
+if(item.getAttribute("href")===currentPage){
 item.classList.add("active");
 }
 });
-});
-
-// Google Sheet CSV URL
-const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTQ6kX1mngT46Apl8xolwlaBAiXrrnmQmXyu8wQqOSmjynpApHsaOpPsvUGxBgok9aRZEcbMmWzgE5d/pub?output=csv";
-
-// Proper CSV parser
-function parseCSV(text) {
-const rows = [];
-let row = [];
-let value = '';
-let insideQuotes = false;
-
-for (let i = 0; i < text.length; i++) {
-const char = text[i];
-const nextChar = text[i+1];
-
-if (char === '"' && insideQuotes && nextChar === '"') {
-value += '"';
-i++;
-} else if (char === '"') {
-insideQuotes = !insideQuotes;
-} else if (char === ',' && !insideQuotes) {
-row.push(value);
-value = '';
-} else if (char === '\n' && !insideQuotes) {
-row.push(value);
-rows.push(row);
-row = [];
-value = '';
-} else {
-value += char;
-}
-}
-row.push(value);
-rows.push(row);
-
-return rows;
 }
 
-function loadData(){
+const sheetURL="PASTE_YOUR_CSV_LINK_HERE";
+
 fetch(sheetURL)
-.then(res => res.text())
-.then(data => {
-
-const rows = parseCSV(data.trim());
-const table = document.getElementById("sheetTable");
-const thead = table.querySelector("thead");
-const tbody = table.querySelector("tbody");
-
-thead.innerHTML = "";
-tbody.innerHTML = "";
-
-// Header
-const headerRow = document.createElement("tr");
-rows[0].forEach(cell => {
-const th = document.createElement("th");
-th.textContent = cell;
+.then(res=>res.text())
+.then(text=>{
+let rows=text.split("\n").map(r=>r.split(","));
+let thead=document.querySelector("#sheetTable thead");
+let tbody=document.querySelector("#sheetTable tbody");
+thead.innerHTML="";
+tbody.innerHTML="";
+let headerRow=document.createElement("tr");
+rows[0].forEach(cell=>{
+let th=document.createElement("th");
+th.textContent=cell;
 headerRow.appendChild(th);
 });
 thead.appendChild(headerRow);
-
-// Data
-rows.slice(1).forEach(row => {
-const tr = document.createElement("tr");
-row.forEach(cell => {
-const td = document.createElement("td");
-td.textContent = cell;
+rows.slice(1).forEach(r=>{
+let tr=document.createElement("tr");
+r.forEach(cell=>{
+let td=document.createElement("td");
+td.textContent=cell;
 tr.appendChild(td);
 });
 tbody.appendChild(tr);
 });
-
-})
-.catch(error => {
-document.querySelector(".loader").innerText = "Error Loading Data";
 });
-}
-
-loadData();
-
-// Auto refresh every 15 seconds
-setInterval(loadData,15000);
-
 </script>
 
 </body>
