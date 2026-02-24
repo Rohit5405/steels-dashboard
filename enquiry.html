@@ -3,105 +3,38 @@
 <head>
     <title>BOS Enquiry</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-    <style>
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
-        body { background:#e9f1ec; }
-        .main { margin-left:230px; padding:30px; }
-
-        .topbar {
-            display:flex;
-            justify-content:space-between;
-            margin-bottom:20px;
-        }
-
-        .search-box {
-            padding:8px 15px;
-            border:none;
-            border-radius:25px;
-            width:250px;
-            box-shadow:0 3px 8px rgba(0,0,0,0.1);
-        }
-
-        .add-btn {
-            background:#0b5d44;
-            color:white;
-            border:none;
-            padding:8px 15px;
-            border-radius:6px;
-        }
-
-        table {
-            width:100%;
-            border-collapse:collapse;
-            background:white;
-            border-radius:12px;
-            overflow:hidden;
-        }
-
-        th, td {
-            padding:10px;
-            border-bottom:1px solid #eee;
-            text-align:left;
-        }
-
-        th {
-            background:#0b5d44;
-            color:white;
-        }
-
-        .empty {
-            text-align:center;
-            padding:40px;
-            color:#888;
-        }
-    </style>
+    <link rel="stylesheet" href="layout.css">
 </head>
-
 <body>
 
-<div id="sidebar"></div>
-
 <div class="main">
+
     <div class="topbar">
         <input type="text" class="search-box" placeholder="Search Enquiry...">
-        <button class="add-btn">+ Add Enquiry</button>
     </div>
 
-    <table>
-        <tr>
-            <th>Enquiry No</th>
-            <th>Timestamp</th>
-            <th>KAM</th>
-            <th>Customer</th>
-            <th>Grade</th>
-            <th>Qty</th>
-            <th>Status</th>
-        </tr>
-        <tr>
-            <td colspan="7" class="empty">No Enquiries Available</td>
-        </tr>
-    </table>
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>Enquiry No</th>
+                <th>Timestamp</th>
+                <th>KAM</th>
+                <th>Customer</th>
+                <th>Grade</th>
+                <th>Qty</th>
+            </tr>
+            <tr>
+                <td colspan="6" style="text-align:center;padding:40px;color:#888;">
+                    No Enquiries Available
+                </td>
+            </tr>
+        </table>
+    </div>
+
 </div>
 
-<script>
-fetch("sidebar.html")
-.then(res => res.text())
-.then(data => {
-    document.getElementById("sidebar").innerHTML = data;
-    highlight();
-});
-
-function highlight() {
-    let page = window.location.pathname.split("/").pop();
-    document.querySelectorAll(".menu-item").forEach(item => {
-        if (item.getAttribute("href") === page) {
-            item.classList.add("active");
-        }
-    });
-}
-</script>
-
+<script src="layout.js"></script>
 </body>
 </html>
