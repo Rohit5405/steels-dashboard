@@ -1,0 +1,26 @@
+document.addEventListener("DOMContentLoaded", function () {
+
+    const sidebarHTML = `
+        <div class="sidebar">
+            <h2>BOS Internal Approval</h2>
+
+            <a href="index.html" class="menu-item">Dashboard</a>
+            <a href="enquiry.html" class="menu-item">Enquiry</a>
+            <a href="quotation.html" class="menu-item">Quotation</a>
+            <a href="order-acceptance.html" class="menu-item">Order Acceptance</a>
+            <a href="credit-limit.html" class="menu-item">Credit Limit</a>
+            <a href="master-data.html" class="menu-item">Master Data</a>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML("afterbegin", sidebarHTML);
+
+    const currentPage = window.location.pathname.split("/").pop();
+
+    document.querySelectorAll(".menu-item").forEach(item=>{
+        if(item.getAttribute("href") === currentPage){
+            item.classList.add("active");
+        }
+    });
+
+});
