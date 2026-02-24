@@ -6,7 +6,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
-
 *{
 margin:0;
 padding:0;
@@ -84,7 +83,6 @@ border-radius:6px;
 cursor:pointer;
 }
 
-/* Table */
 .table-container{
 background:white;
 border-radius:12px;
@@ -95,7 +93,7 @@ overflow:auto;
 table{
 border-collapse:collapse;
 width:100%;
-min-width:1200px;
+min-width:1000px;
 }
 
 th, td{
@@ -115,7 +113,6 @@ text-align:center;
 padding:40px;
 color:#888;
 }
-
 </style>
 </head>
 
@@ -125,11 +122,10 @@ color:#888;
 <h2>BOS Internal Approval</h2>
 
 <a href="dashboard.html" class="menu-item">Dashboard</a>
-<a href="enquiry.html" class="menu-item active">Enquiry</a>
+<a href="enquiry.html" class="menu-item">Enquiry</a>
 <a href="#" class="menu-item">Quotation</a>
 <a href="#" class="menu-item">Order Acceptance</a>
 <a href="#" class="menu-item">Master Data</a>
-
 </div>
 
 <div class="main">
@@ -162,6 +158,17 @@ color:#888;
 </div>
 
 </div>
+
+<script>
+let currentPage = window.location.pathname.split("/").pop();
+let menuItems = document.querySelectorAll(".menu-item");
+
+menuItems.forEach(item=>{
+if(item.getAttribute("href") === currentPage){
+item.classList.add("active");
+}
+});
+</script>
 
 </body>
 </html>
